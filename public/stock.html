@@ -57,10 +57,9 @@
       border-bottom: 1px solid #38444d;
     }
     th { background: #22303c; color: #8899a6; font-weight: 500; font-size: 0.8125rem; }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { color: #e7e9ea; }
     tr:last-child td { border-bottom: none; }
-    .up { color: #f4212e; }
-    .down { color: #00ba7c; }
-    .flat { color: #8899a6; }
     .error { color: #f4212e; padding: 16px; background: #192734; border-radius: 8px; }
     @media (max-width: 600px) {
       th:nth-child(4), td:nth-child(4) { display: none; }
@@ -70,7 +69,7 @@
 <body>
   <div class="container">
     <h1>Stock-A 股票行情</h1>
-    <p class="subtitle">数据来源：新浪财经 · 自动刷新 30 秒</p>
+    <p class="subtitle">数据来源：新浪财经</p>
 
     <div class="toolbar">
       <input id="stockList" type="text" placeholder="股票代码，逗号分隔，如 sh000001,sz000001">
@@ -83,23 +82,75 @@
   <script>
     const DEFAULT_LIST = 'sh000001,sh601127,sh603108,sh513100,sz000572,sh600418,sz000868,sz002271,sh600733,sz000980,sz000625,hkHSMPI';
 
+    let stockItems = [];
+    let pcentSort = null;
+
     function cleanName(name) {
       if (!name) return '-';
       return name.replace(/^[^=]*="/, '').replace(/"$/, '').trim();
     }
 
-    function pcentClass(pcent) {
-      if (!pcent) return 'flat';
-      const val = parseFloat(pcent);
-      if (val > 0) return 'up';
-      if (val < 0) return 'down';
-      return 'flat';
+    function parsePcent(pcent) {
+      if (!pcent) return NaN;
+      return parseFloat(String(pcent).replace('%', ''));
+    }
+
+    function sortIndicator() {
+      if (pcentSort === 'asc') return ' ↑';
+      if (pcentSort === 'desc') return ' ↓';
+      return '';
+    }
+
+    function renderTable() {
+      const content = document.getElementById('content');
+      const items = [...stockItems];
+
+      if (pcentSort) {
+        const dir = pcentSort === 'asc' ? 1 : -1;
+        items.sort((a, b) => {
+          const av = parsePcent(a.pcent);
+          const bv = parsePcent(b.pcent);
+          if (isNaN(av) && isNaN(bv)) return 0;
+          if (isNaN(av)) return 1;
+          if (isNaN(bv)) return -1;
+          return (av - bv) * dir;
+        });
+      }
+
+      const rows = items.map(item => `
+        <tr>
+          <td>${cleanName(item.name)}</td>
+          <td>${item.price ?? '-'}</td>
+          <td>${item.pcent ?? '-'}</td>
+          <td>${item.liang ?? '-'}</td>
+        </tr>
+      `).join('');
+
+      content.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>名称</th>
+              <th>现价</th>
+              <th class="sortable" onclick="togglePcentSort()">涨跌幅${sortIndicator()}</th>
+              <th>成交量(亿)</th>
+            </tr>
+          </thead>
+          <tbody>${rows || '<tr><td colspan="4">暂无数据</td></tr>'}</tbody>
+        </table>
+      `;
+    }
+
+    function togglePcentSort() {
+      if (pcentSort === null) pcentSort = 'desc';
+      else if (pcentSort === 'desc') pcentSort = 'asc';
+      else pcentSort = null;
+      renderTable();
     }
 
     async function loadStocks() {
       const btn = document.getElementById('refreshBtn');
       const status = document.getElementById('status');
-      const content = document.getElementById('content');
       const list = document.getElementById('stockList').value.trim() || DEFAULT_LIST;
 
       btn.disabled = true;
@@ -110,26 +161,12 @@
         if (!res.ok) throw new Error('请求失败: ' + res.status);
         const data = await res.json();
 
-        const rows = Object.values(data).map(item => `
-          <tr>
-            <td>${cleanName(item.name)}</td>
-            <td>${item.price ?? '-'}</td>
-            <td class="${pcentClass(item.pcent)}">${item.pcent ?? '-'}</td>
-            <td>${item.liang ?? '-'}</td>
-          </tr>
-        `).join('');
-
-        content.innerHTML = `
-          <table>
-            <thead>
-              <tr><th>名称</th><th>现价</th><th>涨跌幅</th><th>成交量(亿)</th></tr>
-            </thead>
-            <tbody>${rows || '<tr><td colspan="4">暂无数据</td></tr>'}</tbody>
-          </table>
-        `;
+        stockItems = Object.values(data);
+        renderTable();
         status.textContent = '更新时间: ' + new Date().toLocaleString('zh-CN');
       } catch (err) {
-        content.innerHTML = '';
+        stockItems = [];
+        document.getElementById('content').innerHTML = '';
         status.innerHTML = '<span class="error">' + err.message + '</span>';
       } finally {
         btn.disabled = false;
@@ -138,7 +175,6 @@
 
     document.getElementById('stockList').value = DEFAULT_LIST;
     loadStocks();
-    setInterval(loadStocks, 30000);
   </script>
 </body>
 </html>
