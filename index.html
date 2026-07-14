@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock-A 部署测试</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #192734 100%);
+      color: #e7e9ea;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      max-width: 480px;
+      width: 100%;
+      background: #192734;
+      border: 1px solid #38444d;
+      border-radius: 16px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .badge {
+      display: inline-block;
+      background: #00ba7c;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
+    h1 { font-size: 1.75rem; margin-bottom: 12px; }
+    p { color: #8899a6; font-size: 0.9375rem; line-height: 1.6; margin-bottom: 8px; }
+    .url {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 16px;
+      background: #22303c;
+      border-radius: 8px;
+      color: #1d9bf0;
+      font-size: 0.875rem;
+      word-break: break-all;
+    }
+    .time {
+      margin-top: 24px;
+      font-size: 0.8125rem;
+      color: #71767b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">DEPLOY OK</div>
+    <h1>Stock-A 测试页面</h1>
+    <p>静态页面部署成功，Vercel 可以正常访问。</p>
+    <p>这是一个纯 HTML 页面，不依赖任何 API。</p>
+    <div class="url">https://stock-a-weld.vercel.app/</div>
+    <div class="time" id="time"></div>
+  </div>
+  <script>
+    document.getElementById('time').textContent =
+      '页面加载时间：' + new Date().toLocaleString('zh-CN');
+  </script>
+</body>
+</html>
