@@ -2,9 +2,9 @@ const axios = require('axios');
 const express = require('express');
 const iconv_lite_1 = require("iconv-lite");
 
-// 创建一个 express 应用
 const server = express();
 
+server.use(express.static('public'));
 
 /* stock */
 server.get('/stock', async (req, res) => {
@@ -61,7 +61,7 @@ server.get('/stock', async (req, res) => {
 })
 
 
-server.get('/', (req, res) => {
+server.get('/health', (req, res) => {
   res.json({ status: 'ok', endpoint: '/stock?list=sh000001' });
 });
 
