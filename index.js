@@ -16,7 +16,7 @@ server.get('/stock', async (req, res) => {
 });
 
 server.get('/health', (req, res) => {
-  res.json({ status: 'ok', endpoint: '/stock?list=sh000002' });
+  res.json({ status: 'ok', endpoint: '/stock?list=sh000005' });
 });
 
 const PORT = process.env.PORT || 3000;
