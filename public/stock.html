@@ -43,6 +43,8 @@
     }
     button:hover { background: #1a8cd8; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary { background: #38444d; }
+    button.secondary:hover { background: #4a5568; }
     .status { color: #71767b; font-size: 0.8125rem; margin-bottom: 12px; }
     table {
       width: 100%;
@@ -74,6 +76,7 @@
     <div class="toolbar">
       <input id="stockList" type="text" placeholder="股票代码，逗号分隔，如 sh000001,sz000001">
       <button id="refreshBtn" onclick="loadStocks()">刷新</button>
+      <button class="secondary" onclick="loadMoreStocks()">查看更多</button>
     </div>
     <div class="status" id="status">加载中...</div>
     <div id="content"></div>
@@ -81,6 +84,7 @@
 
   <script>
     const DEFAULT_LIST = 'sh000001,sh601127,sh603108,sh513100,sz000572,sh600418,sz000868,sz002271,sh600733,sz000980,sz000625,hkHSMPI';
+    const FULL_LIST = 'sh000001,sh600702,sh603198,sz002567,sz001979,sz002466,sz000625,sh600418,sh601127,sh512710,sz002594,sz000002,sz000858,sh603108,sh600519,sh600111,sh600048,sh518880,sh588200,sh600733,sh515220,sh601001,sh600171,sh600030,sh600611,sh605108,sz002714,sz300059,sz002223,sz003040,sz002173,sz000596,sz000868,sz000980,sh603099,sh603199,sh513100,sh600036,sh600238,sh510880,sz300760,sz002123,sh603860,sz002607,sz001379,sz002186,sz000572,sh600754,sh603737,sz002271,sh516010,sh600016';
 
     let stockItems = [];
     let pcentSort = null;
@@ -146,6 +150,11 @@
       else if (pcentSort === 'desc') pcentSort = 'asc';
       else pcentSort = null;
       renderTable();
+    }
+
+    function loadMoreStocks() {
+      document.getElementById('stockList').value = FULL_LIST;
+      loadStocks();
     }
 
     async function loadStocks() {
