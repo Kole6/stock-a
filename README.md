@@ -11,18 +11,25 @@ npm start
 
 浏览器访问 http://localhost:3000
 
-## 免费部署到 Render（推荐）
+## 免费部署（无需银行卡）— 推荐 Vercel
 
-项目已配置 [Render](https://render.com) 免费套餐，部署后可通过公网 URL 访问。
+| 平台 | 需要银行卡 | 说明 |
+|------|-----------|------|
+| **Vercel** | 否 | 推荐，GitHub 登录即可 |
+| **Netlify** | 否 | 需改成 Serverless，类似 Vercel |
+| **Render / Railway / Fly.io** | 是 | 绑卡仅做身份验证，免费层一般不扣费 |
 
-### 一键部署
+### 为什么 Render 要填银行卡？
 
-1. 将代码推送到 **GitHub** 仓库（本项目默认：`https://github.com/Kole6/stock-a`）
-2. 打开 [Render Dashboard](https://dashboard.render.com/)
-3. 点击 **New +** → **Blueprint**
-4. 连接 GitHub 账号，选择 `stock-a` 仓库
-5. Render 会自动读取 `render.yaml` 并创建免费 Web Service
-6. 等待部署完成（约 2–3 分钟），获得类似 `https://stock-api-xxxx.onrender.com` 的地址
+Render 等平台要求绑卡是为了**防止滥用**（批量注册、挖矿等），不是一定要收费。免费套餐在额度内通常**不会扣钱**，但很多人不想绑卡，所以更推荐 Vercel。
+
+### Vercel 部署步骤（约 3 分钟）
+
+1. 将代码推送到 GitHub
+2. 打开 [vercel.com](https://vercel.com)，用 **GitHub 账号登录**（无需银行卡）
+3. 点击 **Add New → Project**，导入 `stock-a` 仓库
+4. 保持默认配置，点击 **Deploy**
+5. 部署完成后获得地址，例如 `https://stock-a.vercel.app`
 
 ### 访问方式
 
@@ -32,11 +39,19 @@ npm start
 | `https://你的域名/stock?list=sh000001,sz000001` | JSON API |
 | `https://你的域名/health` | 健康检查 |
 
-### 免费套餐说明
+### Vercel 免费套餐说明
 
-- **费用**：$0 / 月
-- **限制**：15 分钟无访问会休眠，下次打开需等待约 30 秒冷启动
-- **流量**：每月 100 GB 出站流量
+- **费用**：$0 / 月，无需信用卡
+- **限制**：Serverless 冷启动约 1–3 秒（比 Render 休眠后快）
+- **流量**：100 GB / 月，个人使用足够
+
+## 备选：Render 部署（需绑卡）
+
+若你接受绑卡验证，项目也保留了 `render.yaml` 配置：
+
+1. 打开 [Render Dashboard](https://dashboard.render.com/)
+2. **New + → Blueprint**，连接 GitHub 仓库
+3. 自动读取 `render.yaml` 创建免费 Web Service
 
 ## API 示例
 

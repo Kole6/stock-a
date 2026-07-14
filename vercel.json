@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/stock", "destination": "/api" },
+    { "source": "/health", "destination": "/api" }
+  ]
+}
